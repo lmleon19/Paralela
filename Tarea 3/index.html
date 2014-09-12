@@ -1,0 +1,126 @@
+<!doctype>
+<html lang="es">
+<head>
+	<meta charset="utf-8">
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<style type="text/css">
+		input[type=number] {
+	   		width: 50px;
+		}
+	</style>
+	<title>Tarea 3</title>
+</head>
+<body>
+	<h1>TAREA 3 PARALELA</h1>
+	<section>
+
+		<form>
+			<h4>Ingrese Cantidad de Matriz</h4>
+			Eje X: <input type="number" id="largo" >
+			Eje Y: <input type="number" id="ancho" >
+			<input type="button" id="rellenar" onclick="Empezar()" value="Activar Función">
+			<input type="button" disabled id="activar" onclick="Calcular()" value="Calcular">
+		</form>
+	</section>
+	<section id="Total">
+	</section>
+	<section id="Valores">
+	</section>
+</body>
+
+<script type="text/javascript">
+	function Empezar(){
+		var largo =$('#largo').val();
+		var ancho =$('#ancho').val();
+
+		for(var i=0; i<ancho;i++){
+			for(var j=0; j<largo;j++){
+				var aux=i + "-" + j;
+				$('#Valores').append('<input required type="number" size="5" id="'+aux+'" placeholder="'+aux+'" >');
+			}
+			$('#Valores').append('<br/>');
+		}
+		$('#activar').prop( "disabled", false );
+		$('#largo').prop( "disabled", true );
+		$('#ancho').prop( "disabled", true );
+		$('#rellenar').prop( "disabled", true );
+		
+		
+	}
+
+
+	function isset(variable_name) {
+	    try{
+	        if (typeof(eval(variable_name)) != 'undefined')
+		        if (eval(variable_name) != null)
+		        	return true;
+	    } 
+	    catch(e) { }
+	    	return false;
+   }
+
+	function Calcular(){
+
+		var largo =$('#largo').val();
+		var ancho =$('#ancho').val();
+
+		var matriz=new Array(ancho);
+		for(var i=0; i<ancho;i++){
+			matriz[i]=new Array(largo);
+			for(var j=0; j<largo;j++){
+				var aux=i + "-" + j;
+				matriz[i][j] =$('#'+ aux).val();
+				if(matriz[i][j]==""){
+					alert("Para obtener un valor 100% optimo ingrese todos los datos.");
+				}
+			}
+		}
+		//console.log(matriz);
+
+
+		var  largest = -1;
+
+		for(var k=0; k<ancho;k++){
+			for(var j=0; j<largo;j++){
+				
+				var AA = 1, BB = 1, CC = 1, DD = 1;
+				for(var i = 0; i < 4; i++ )
+		        {
+		        	try{
+		        		if( isset(matriz[k+i][j]) )
+		                	BB *= matriz[k+i][j];
+		        	}catch(e){}
+		            
+		        	try{
+		            	if( isset(matriz[k][j+i]) )
+		                	AA *= matriz[k][j+i];
+					}catch(e){}
+		        	
+		        	try{
+		            	if( isset(matriz[k+i][j+i]) )
+		                	CC *= matriz[k+i][j+i];
+		            }catch(e){}
+
+		            try{
+		            	if( isset(matriz[k-i][j+i]) )
+		                	DD *= matriz[k-i][j+i];
+		            }catch(e){}
+		            
+		        }
+		        if( BB > largest )
+		            largest = BB;
+		        if( AA > largest )
+		            largest = AA;
+		        if( CC > largest )
+		            largest = CC;
+		        if( DD > largest )
+		            largest = DD;
+			}
+		}
+
+		$('#Total').append('<h4>El valor multiplicado es'+ largest+'</h4>');
+	}
+</script>
+</html>
+
+
